@@ -35,7 +35,7 @@ export const appearanceConfig: AppearanceConfig = {
     background: "#0c0d10",
     homeBackground: "#0a0b11",
     foreground: "#fefefe",
-    link: "#93ffd7",
+    link: "#00a17a",
     linkHover: "#c7ffe9",
     linkHoverBackground: "#153329",
     particleHome: "#b47ae2",
