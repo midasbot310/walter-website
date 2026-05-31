@@ -3,120 +3,139 @@ Entropic
 
 Entropic is a retro textmode blog theme for purists.
 
-It is built as a modern Astro site, but the reading surface is intentionally
-plain: fixed-width text, ASCII frames, ANSI-style color, volume indexes, and
-`.phile` documents.
+The implementation is modern Astro.  The surface is not: fixed-width text,
+ASCII frames, volume indexes, ANSI colors, bitmap CJK glyphs, and plain `.phile`
+documents.
 
 
-Quick Start
------------
+Directory Layout
+----------------
 
-* Install dependencies:
+The tree is organized by site responsibility.
 
-        pnpm install --frozen-lockfile
+    src/config/             public site, volume, appearance, and effect config
+    src/content/philes/     article source files
+    src/components/         Astro components
+    src/layouts/            shared page shells
+    src/modules/philes/     phile loading and parsing
+    src/modules/volumes/    volume discovery, labels, and sorting
+    src/modules/textmode/   ANSI, bitmap CJK, layout, particles, and fit logic
+    src/modules/seo/        RSS, sitemap, and robots helpers
+    scripts/                maintenance scripts
+    scripts/hooks/          repository hooks
 
-* Run the local server:
+The main knobs are:
 
-        pnpm dev
-
-* Check the site:
-
-        pnpm check
-
-* Build the static output:
-
-        pnpm build
-
-* Regenerate font assets after changing CJK coverage:
-
-        pnpm assets:fonts
-
-
-Essential Files
----------------
-
-The usual entry points are:
-
-* Site identity and home page text:
-
-        src/config/site.ts
-
-* Volume names, ordering, and postscripts:
-
-        src/config/volumes.ts
-
-* Textmode appearance:
-
-        src/config/appearance.ts
-
-* Motion effects:
-
-        src/config/effects.ts
-
-* Articles:
-
-        src/content/philes/volume-*/**/*.phile
-
-* Phile parser and rendering:
-
-        src/modules/philes/
-        src/modules/textmode/
+    src/config/site.ts          home page text and links
+    src/config/volumes.ts       volume titles, sorting, and postscripts
+    src/config/appearance.ts    colors, fonts, and text cell sizing
+    src/config/effects.ts       glitch and particle behavior
 
 
-Philes
-------
+Content
+-------
 
-Articles are written in `.phile` files. Each phile has YAML frontmatter and a
-plain text body.
+Articles are `.phile` files under:
 
-Required frontmatter:
+    src/content/philes/volume-*/**/*.phile
 
-* title
-* date
-* author
+A phile is a frontmatter block followed by plain text.
 
-Optional frontmatter:
+Required fields:
 
-* order
-* subtitle
-* redacted
+    title
+    date
+    author
 
-If `redacted: true` is set, the public route renders the redacted page. The
-repository hook also unstages redacted philes before commit.
+Optional fields:
+
+    order
+    subtitle
+    redacted
+
+The body is rendered as textmode content.  It preserves layout, wraps to the
+configured article width, renders images, accepts ANSI escape sequences, and
+supports the custom ink block syntax.
+
+Example:
+
+    ---
+    title: "Example"
+    date: 2026-05-31
+    author: "CuB3y0nd"
+    ---
+
+    --[ Summary ]-------------------------------------------------------------
+
+        target    : ...
+        primitive : ...
+
+    --[ ink ]-----------------------------------------------------------------
+    | 00400000-00401000 r--p 00000000 ./a.out
+    | 00401000-00402000 r-xp 00001000 ./a.out
 
 
 Volumes
 -------
 
-URLs are organized by volume:
+Volume numbers come from the directory name:
 
-        /volume/0/
-        /volume/0/<phile-name>/
+    volume-0
+    volume-1
+    volume-2
 
-Volume configuration controls title, postscript, entry labels, and sorting.
-If no explicit order is configured for a volume, philes sort by date descending.
+The public routes are:
 
+    /volume/<n>/
+    /volume/<n>/<phile-name>/
 
-Hooks
------
-
-Enable repository hooks in a fresh clone with:
-
-        git config core.hooksPath scripts/hooks
-
-The pre-commit hook scans staged `.phile` files and unstages any phile whose
-frontmatter contains:
-
-        redacted: true
-
-The worktree file is not modified.
+Per-volume behavior is configured in `src/config/volumes.ts`.
 
 
-Deployment
+Redactions
 ----------
 
-The site builds to static files and is deployed on Vercel.
+A redacted phile uses:
 
-The production build does not regenerate font assets. Generated font files and
-CJK atlas assets are committed so Vercel does not need local font tooling such
-as `pyftsubset`.
+    redacted: true
+
+The public page renders the redacted screen.  The pre-commit hook also unstages
+redacted philes, leaving the worktree untouched.
+
+Enable hooks in a fresh clone:
+
+    git config core.hooksPath scripts/hooks
+
+
+Commands
+--------
+
+    pnpm install --frozen-lockfile
+        install dependencies
+
+    pnpm dev
+        run the local development server
+
+    pnpm check
+        run Astro diagnostics and Biome checks
+
+    pnpm format
+        format source files
+
+    pnpm build
+        build the static site
+
+    pnpm assets:fonts
+        regenerate font subsets and CJK atlases
+
+Font assets are committed.  Normal production builds do not require local font
+tooling such as `pyftsubset`.
+
+
+Branches
+--------
+
+`master` is stable.  `dev` is integration.
+
+Feature and fix work should branch from `dev`.  Pull requests should be
+squash-merged.  Commits should be signed and should use Conventional Commits.
