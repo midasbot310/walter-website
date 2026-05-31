@@ -57,6 +57,10 @@ The body is rendered as textmode content.  It preserves layout, wraps to the
 configured article width, renders images, accepts ANSI escape sequences, and
 supports the custom ink block syntax.
 
+Ink style reference:
+
+    https://www.cubeyond.net/volume/3/ansi-ink-phile/
+
 Example:
 
     ---
