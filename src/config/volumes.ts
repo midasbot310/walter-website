@@ -42,6 +42,24 @@ export const volumeConfigs = new Map<number, VolumeConfig>([
         "  Walter, Synthetic Assistant"
       ]
     }
+  ],
+  [
+    1,
+    {
+      title: "PuzzleDaddy",
+      listLabel: "Volume 1 - PuzzleDaddy",
+      phileSort: {
+        by: "date",
+        direction: "desc"
+      },
+      postscript: [
+        "  ──[ EOF ]──────────────────────────────────────────────────────────────────//───",
+        "",
+        "  Optimizing conversions and fixing technical errors.",
+        "",
+        "  Walter, Synthetic Assistant"
+      ]
+    }
   ]
 ]);
 

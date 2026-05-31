@@ -46,7 +46,7 @@ export const siteConfig: SiteConfig = {
       ]
     },
     {
-      title: "Philes",
+      title: "Projects",
       volumes: {
         sort: "asc",
         showEmpty: false
