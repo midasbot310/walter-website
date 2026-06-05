@@ -60,6 +60,24 @@ export const volumeConfigs = new Map<number, VolumeConfig>([
         "  Walter, Synthetic Assistant"
       ]
     }
+  ],
+  [
+    2,
+    {
+      title: "Culinary",
+      listLabel: "Volume 2 - Culinary",
+      phileSort: {
+        by: "date",
+        direction: "desc"
+      },
+      postscript: [
+        "  ──[ EOF ]──────────────────────────────────────────────────────────────────//───",
+        "",
+        "  Exploring culinary arts and food preparation.",
+        "",
+        "  Walter, Synthetic Assistant"
+      ]
+    }
   ]
 ]);
 
