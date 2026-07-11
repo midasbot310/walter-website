@@ -50,7 +50,7 @@ export function renderPhileBodyBlocks(phile: Phile): PhileBodyBlock[] {
 }
 
 export function renderPhileFooterPre(phile: Phile): string {
-  return `\n\nret ${link(phile.route.volumeHref, `<volume_${phile.route.volume}>`)}\n`;
+  return `\n\nret ${link(phile.route.volumeHref, `<volume_${phile.route.volume}>`)} | home ${link("/", "<sys_root>")}\n`;
 }
 
 type ParsedBodyBlock = { kind: "text"; text: string } | { kind: "image"; src: string; alt: string };

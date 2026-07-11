@@ -9,6 +9,25 @@ type Props = {
   pageType?: "website" | "article";
   publishedTime?: Date;
 };
+
+const isHome = Astro.url.pathname === "/" || Astro.url.pathname === "";
+const pathname = Astro.url.pathname;
+const parts = pathname.split("/").filter(Boolean);
+
+const breadcrumbs = [];
+if (!isHome) {
+  breadcrumbs.push({ label: "<home>", href: "/" });
+  if (parts.length >= 2 && parts[0] === "volume") {
+    const volNum = parts[1];
+    const isPhile = parts.length > 2;
+    if (isPhile) {
+      breadcrumbs.push({ label: `<volume_${volNum}>`, href: `/volume/${volNum}/` });
+      breadcrumbs.push({ label: "current" });
+    } else {
+      breadcrumbs.push({ label: `volume_${volNum}` });
+    }
+  }
+}
 ---
 
 <BaseLayout
@@ -20,6 +39,35 @@ type Props = {
   publishedTime={Astro.props.publishedTime}
 >
   <main class="screen">
+    {!isHome && (
+      <div class="nav-container">
+        <nav class="top-nav textmode-wrap">
+          <pre class="textmode-pre">sys_root: {breadcrumbs.map((b, i) => (
+            <span>
+              {i > 0 && " / "}
+              {b.href ? <a href={b.href}>{b.label}</a> : b.label}
+            </span>
+          ))}</pre>
+        </nav>
+      </div>
+    )}
     <slot />
   </main>
 </BaseLayout>
+
+<style>
+  .nav-container {
+    display: block;
+    text-align: center;
+    width: 100%;
+    margin-bottom: calc(var(--text-size) * 1);
+    margin-top: calc(var(--text-size) * 1);
+  }
+  .top-nav {
+    display: inline-block;
+    text-align: left;
+    width: calc(var(--text-cell) * 85);
+    padding-left: calc(var(--text-cell) * 4);
+    box-sizing: border-box;
+  }
+</style>
